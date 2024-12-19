@@ -1,0 +1,4 @@
+markey_4_nodes_10_samples_valid.csv with accuracy 64.06%
+markey_4_nodes_20_samples_valid.csv with accuracy 73.44%
+markey_4_nodes_30_samples_valid.csv with accuracy 64.06%
+markey_4_nodes_40_samples_valid.csv with accuracy 73.44%

@@ -1,0 +1,36 @@
+This is the two layer neural network model with the default number of neurons (5) in 
+the hidden layer. 
+
+This is an explanation of how it's trained:
+
+Below are example Python scripts for training and validating a simple neural network with one hidden layer. They are similar in structure to the previous linear regression example, but now we have:
+
+A single hidden layer with a configurable number of nodes (via --nodes_per_layer).
+A threshold activation function at each hidden node and at the output:
+If the neuron’s raw output ≥ 0, neuron’s output = 1
+Else, neuron’s output = 0
+Important Notes:
+
+Training Approach:
+We will use scikit-learn’s MLPClassifier to learn the weights. Although MLPClassifier typically uses differentiable activations (e.g., relu, logistic), we’ll train with a simple activation function (identity) and then apply the thresholding logic ourselves when we do the final forward pass. This won’t perfectly match what’s done during training, but it keeps the code simple. After training, we simply extract the learned weights and biases.
+
+Weight and Bias Format:
+We’ll write the weights and biases in a format that identifies layer, node, and input:
+
+Hidden layer weights: w1_{node}_{input}
+Hidden layer biases: b1_{node}
+Output layer weights: w2_{output_node}_{hidden_node}
+Output layer biases: b2_{output_node}
+Since we have a single output node, output_node will always be 1.
+
+Validation Program:
+The validation program will:
+
+Load the weights and biases from the file produced by the training program.
+Determine the topology by parsing the weight names.
+Perform a forward pass:
+Compute hidden layer outputs: Z = X*W1 + b1, then threshold: Z ≥ 0 => 1 else 0
+Compute output: Y_pred = Z*W2 + b2, then threshold: Y_pred ≥ 0 => 1 else 0
+Compare predictions to actual labels and compute accuracy.
+
+On a 5 node network it only only attains an accuracy of 63%.

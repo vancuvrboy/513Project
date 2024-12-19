@@ -1,0 +1,1 @@
+(error "Parse Error: results/TwoLayer_SMT_markey_slack/synthesis_test_39_cues_slack.smt2:1005.2: Expected SMT-LIBv2 command, got `minimize` (SYMBOL).")

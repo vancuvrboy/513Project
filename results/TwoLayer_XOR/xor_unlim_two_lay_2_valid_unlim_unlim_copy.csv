@@ -1,0 +1,13 @@
+Network Topology:
+Input Layer: 2 inputs
+Layer 1: 2 neurons
+Output Layer: 1 neuron
+Threshold Activation: Enabled
+
+Actual Label,Predicted Label
+0,0.0
+1,1.0
+1,1.0
+0,0.0
+
+Accuracy,100.00%

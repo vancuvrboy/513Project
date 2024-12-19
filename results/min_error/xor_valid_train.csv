@@ -1,0 +1,13 @@
+Network Topology:
+Input Layer: 2 inputs
+Layer 1: 2 neurons
+Layer 2: 1 neurons
+Sigmoid Activation: Enabled
+
+Actual Label,Predicted Label
+0,0
+1,1
+1,1
+0,0
+
+Accuracy,100.00%

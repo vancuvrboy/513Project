@@ -1,0 +1,10 @@
+Testing of two layer neural network with Markey (deception) data
+39 cues, unlimited samples on training and validation
+5 nodes in layer 2 versions 1_39_...two_lay_5...
+
+with 2 nodes in the hidden layer prediction accuracy is 71.88%
+with 3 nodes in the hidden layer prediction accuracy in 68.75%
+with 4 nodes in the hidden layer prediction accuracy in 76.56%
+with 5 nodes in the hidden layer prediction accuracy is 73.44%
+with 7 nodes in the hidden layer prediction accuracy is 71.88%
+with 39 nodes in the hidden layer prediction accuracy is 76.56%

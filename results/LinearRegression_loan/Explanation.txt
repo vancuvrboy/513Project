@@ -1,0 +1,10 @@
+These results are from running the linear regression training
+program: software/train_linear_classifier.Python
+
+This is run on the loan training set to create the linear
+coefficients (or weights) file.
+
+Validation is done with software/validate_linear_classifier.py
+
+It attains an accuracy of 93% training on 1000 samples and validating on an
+unlimited number.

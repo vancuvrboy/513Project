@@ -1,0 +1,2 @@
+unsat
+(error "model generation not enabled")

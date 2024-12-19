@@ -1,0 +1,6 @@
+Using OptiMathSAT, threshold activation, no minimum constraint:
+10_samples_4_nodes_valid_valid.csv with accuracy 50.00%
+30_samples_4_nodes_valid_valid.csv with accuracy 64.06%
+40_samples_4_nodes_valid_valid.csv with accuracy 67.19%
+60_samples_4_nodes_valid_valid.csv with accuracy 70.31%
+unlim_samples_4_nodes_valid_valid.csv with accuracy 53.12%

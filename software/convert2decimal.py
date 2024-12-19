@@ -19,6 +19,10 @@ def fraction_to_decimal(frac_str):
     # Step 1: Remove parentheses but leave spaces intact
     frac_str = frac_str.replace("(", "").replace(")", "")
 
+    # if "to_real " is present, remove it
+    if "to_real " in frac_str:
+        frac_str = frac_str.replace("to_real ", "")
+
     # Step 2: Set flags based on the presence of '/' and '-'
     fraction_flag = '/' in frac_str
     minus_flag = '-' in frac_str
@@ -53,7 +57,7 @@ def fraction_to_decimal(frac_str):
         return Decimal('NaN')
 
 
-def parse_model_output(file_path):
+def parse_model_output(file_path, wb_only=False, convert_slack=False):
     model = {}
     try:
         with open(file_path, 'r') as f:
@@ -79,7 +83,7 @@ def parse_model_output(file_path):
         if carry_over:
             fun_statement += " " + line
             if fun_statement.count('(') == fun_statement.count(')'):
-                process_define_fun_statement(fun_statement, model)
+                process_define_fun_statement(fun_statement, model, wb_only, convert_slack)
                 carry_over = False
                 fun_statement = ""
             continue
@@ -90,18 +94,38 @@ def parse_model_output(file_path):
             if line.endswith("Real"):
                 carry_over = True
             else:
-                process_define_fun_statement(fun_statement, model)
+                process_define_fun_statement(fun_statement, model, wb_only, convert_slack)
                 fun_statement = ""
 
     print_debug("Debug: Finished parsing model output")
     return model
 
-def process_define_fun_statement(fun_statement, model):
+def process_slack_variable(var_name, fraction_str, model):
+    """
+    Processes slack variables and adds them to the model.
+    """
+    # Convert the fraction part to decimal
+    decimal_value = fraction_to_decimal(fraction_str)
+    model[var_name] = decimal_value
+    print_debug(f"Debug: Parsed slack variable - {var_name} = {decimal_value}")
+
+def process_define_fun_statement(fun_statement, model, wb_only=False, convert_slack=False):
     # Extract the variable name and the fraction value using regex
     match = re.match(r'\(define-fun (\w+) \(\) Real (.+)\)', fun_statement)
+    # if not floating point, try integer
+    if not match:
+        match = re.match(r'\(define-fun (\w+) \(\) Int (.+)\)', fun_statement)
     if not match:
         print_debug(f"Skipping line - did not match define-fun pattern: {fun_statement}")
         return
+
+    if wb_only:
+        # if not a weight or bias
+        if not match.group(1).startswith('w') and not match.group(1).startswith('b'):
+            if convert_slack:
+                process_slack_variable(match.group(1), match.group(2), model)
+            else:
+                return
     
     var_name = match.group(1)
     fraction_str = match.group(2).strip()
@@ -122,9 +146,11 @@ def print_model(model):
 def main():
     parser = argparse.ArgumentParser(description='Convert SMT solver fractional outputs to decimals.')
     parser.add_argument('input_file', type=str, help='Path to the SMT solver output file (e.g., out1.txt)')
+    parser.add_argument('--only_wt', action='store_true', help='Produce weight file with weights only (not intermediate nodes)')
+    parser.add_argument('--convert_slack', action='store_true', help='Convert slack variables to decimal')
     args = parser.parse_args()
     
-    model = parse_model_output(args.input_file)
+    model = parse_model_output(args.input_file, args.only_wt, args.convert_slack)
     if model:
         print_model(model)
 

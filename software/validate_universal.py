@@ -89,9 +89,11 @@ def load_weights(weights_bias_file):
 
 
 
+
 def sigmoid(x):
-    """ Sigmoid activation function """
-    return 1 / (1 + math.exp(-x))
+    """ Stepped threshold activation function """
+    # if x >= 0, then return 1, else 0
+    return 1 if x >= -0.0000000001 else 0
 
 
 def forward_pass(weights, biases, features, use_sigmoid=True):
@@ -112,7 +114,9 @@ def forward_pass(weights, biases, features, use_sigmoid=True):
             weighted_sum = sum(weights[str(layer_index)][node].get(str(i+1), 0) * inputs[i] for i in range(len(inputs)))
             # Retrieve the bias for the current node; default to 0 if missing
             weighted_sum += biases.get(str(layer_index), {}).get(node, 0)
-            if use_sigmoid:
+            # if use_sigmoid and this is not the last layer, apply sigmoid activation
+            if use_sigmoid and str(layer_index) != str(len(weights)):
+                print_debug("Applying sigmoid activation")
                 next_inputs.append(sigmoid(weighted_sum))
             else:
                 next_inputs.append(weighted_sum)
@@ -124,6 +128,7 @@ def forward_pass(weights, biases, features, use_sigmoid=True):
 
     # Final output decision with the output bias (b_out) explicitly added if present
     output = inputs[0] + biases.get('output', {}).get('1', 0)  # Use b_out from 'output' section as the bias for the last layer
+    print_debug(f"Final Output: {output}")
     return 1 if output >= 0.0 else 0
 
 def determine_topology(weights, use_sigmoid, single_layer_detected):
@@ -191,13 +196,25 @@ def evaluate_model(weights_bias_file, validation_data_file, output_file, use_sig
     correct_predictions = 0
     
     # Iterate through validation data rows
+    sample_num = 0
     if num_samples > 0:
         print(f"Validating the first {num_samples} samples...")
         df = df.head(num_samples)  # Limit the number of samples to validate
     for _, row in df.iterrows():
-        actual_label = row['Guilt']
+        sample_num += 1
+        print_debug(f"Validating sample {sample_num}")
+        # if the heading "Guilt" is not present, then check for column with heading "Label", else assume the first column is the actual_label
+        if 'Guilt' in df.columns:
+            actual_label = row['Guilt']
+        elif 'Label' in df.columns:
+            actual_label = row['Label']
+        else:
+            actual_label = row.iloc[0]
+            
+        # actual_label = row['Guilt']
         features = row.iloc[1:].values  # Extract feature values as a list
         predicted_label = forward_pass(weights, biases, features, use_sigmoid)
+        print_debug(f"Actual: {actual_label}, Predicted: {predicted_label}")
         
         # Record result
         results.append([actual_label, predicted_label])
@@ -216,7 +233,7 @@ def evaluate_model(weights_bias_file, validation_data_file, output_file, use_sig
         for line in topology:
             writer.writerow([line])  # Write each line of topology separately
         writer.writerow([])  # Blank line before results
-        writer.writerow(['Actual Guilt', 'Predicted Guilt'])
+        writer.writerow(['Actual Label', 'Predicted Label'])
         writer.writerows(results)
         writer.writerow([])
         writer.writerow(['Accuracy', f"{accuracy:.2f}%"])

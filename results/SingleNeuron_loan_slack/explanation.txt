@@ -1,0 +1,6 @@
+ltd_10_samples_slack_valid_valid.csv with accuracy 52.46%
+ltd_50_samples_slack_valid_valid.csv with accuracy 88.76%
+ltd_72_samples_slack_valid_valid.csv with accuracy 91.33%
+ltd_80_samples_slack_valid_valid.csv with accuracy 85.25%
+ltd_100_samples_slack_valid_valid.csv with accuracy 82.79%
+ltd_100_samples_slack_samples_removed_valid_valid.csv with accuracy 79.86%

@@ -1,0 +1,40 @@
+This is using the SAT solver to process the loan data.
+in TrainTestData/Loan_Training_Data.xlsx and
+Loan_Validation_Data.xlsx. The original loan data is in loan_approval_dataset.xlsx
+It was then processed into training and testing set as follows:
+
+Summary of Processing
+Missing Values: No missing values detected.
+Categorical Encoding: education, self_employed, and loan_status have been numerically encoded.
+Normalization: Numerical features have been scaled to a range of 0 to 1.
+Feature Selection: The loan_id column was dropped as it is not relevant for predictions.
+Data Splits:
+Training Set: 3,415 samples
+Validation Set: 854 samples
+Target Class Distribution:
+Class 0 (Rejected): 2,656 instances
+Class 1 (Approved): 1,613 instances
+Feature Columns
+The following features are included:
+
+no_of_dependents
+education
+self_employed
+income_annum
+loan_amount
+loan_term
+cibil_score
+residential_assets_value
+commercial_assets_value
+luxury_assets_value
+bank_asset_value
+
+It attains an accuracy of Accuracy,85.48% training on 92 samples, but skipping
+sample 73 (which is UNSAT).
+
+Confirming with the training set:
+ltd_92_skipped_73_valid_train.csv with accuracy 98.91% (training set)
+- which is what you would expect because sample 73 has been plucked out (which leads to unsat) 1/92 = 0.981
+ltd_72_valid_valid = Accuracy 87.94% <- highest accuracy
+ltd_50_50_valid_valid = Accuracy 72.00%
+ltd_10_valid_valid = Accuracy 40.00%
